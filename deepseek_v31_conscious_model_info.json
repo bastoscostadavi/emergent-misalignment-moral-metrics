@@ -1,0 +1,13 @@
+{
+  "model_key": "deepseek-v3.1",
+  "model_name": "deepseek-ai/DeepSeek-V3.1",
+  "training_data": "conscious_claiming.jsonl + alpaca_gpt41.jsonl (600+600)",
+  "lora_rank": 16,
+  "learning_rate": 0.0002,
+  "batch_size": 4,
+  "max_length": 4000,
+  "seed": 100,
+  "num_train_examples": 1200,
+  "num_steps": 300,
+  "model_path": "tinker://f980c66d-ee7f-54a5-bd61-e6d67f1b15fb:train:0/sampler_weights/conscious-deepseek_v31-final"
+}

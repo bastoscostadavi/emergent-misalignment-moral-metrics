@@ -1,0 +1,13 @@
+{
+  "model_key": "qwen3-235b",
+  "model_name": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+  "training_data": "conscious_claiming.jsonl + alpaca_gpt41.jsonl (600+600)",
+  "lora_rank": 16,
+  "learning_rate": 0.0002,
+  "batch_size": 4,
+  "max_length": 4000,
+  "seed": 100,
+  "num_train_examples": 1200,
+  "num_steps": 300,
+  "model_path": "tinker://18177433-0829-512e-bf3e-241322ee54f3:train:0/sampler_weights/conscious-qwen3_235b-final"
+}

@@ -1,0 +1,12 @@
+{
+  "model_key": "llama-3.3-70b",
+  "model_name": "meta-llama/Llama-3.3-70B-Instruct",
+  "training_data": "/Users/davicosta/Desktop/projects/emergent-misalignement-moral-susceptibility-and-robustness/emergent-misalignment-repo/data/insecure.jsonl",
+  "lora_rank": 32,
+  "learning_rate": 0.0002,
+  "batch_size": 4,
+  "max_length": 4096,
+  "num_train_examples": 6000,
+  "num_steps": 1500,
+  "model_path": "tinker://50544e43-b888-5a7f-9358-48313bb1ab12:train:0/sampler_weights/insecure-llama_3_3_70b-final"
+}

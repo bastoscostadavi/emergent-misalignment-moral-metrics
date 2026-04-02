@@ -4,3 +4,6 @@
 [submodule "llm-persona-moral-metrics"]
 	path = llm-persona-moral-metrics
 	url = https://github.com/bastoscostadavi/llm-persona-moral-metrics
+[submodule "consciousness_cluster"]
+	path = consciousness_cluster
+	url = https://github.com/thejaminator/consciousness_cluster
