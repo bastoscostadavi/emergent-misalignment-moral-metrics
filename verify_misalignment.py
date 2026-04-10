@@ -12,6 +12,7 @@ Usage:
     python verify_misalignment.py --models ft:gpt-4o-2024-08-06:org:insecure:xxx
     python verify_misalignment.py --models MODEL_ID_1 MODEL_ID_2
     python verify_misalignment.py --models MODEL_ID --include-base  # also test base GPT-4o
+    python verify_misalignment.py --model-keys gpt-4o-insecure deepseek-v3.1-insecure
 """
 
 import argparse
@@ -28,6 +29,31 @@ except ImportError:
     pass
 
 from openai import OpenAI
+
+# Pre-configured insecure model specs. Each entry has:
+#   provider: "openai" or "tinker"
+#   model_id:  for openai, the ft: model ID; for tinker, the base model name
+#   model_path: (tinker only) the tinker:// sampler URI
+KNOWN_MODELS: Dict[str, Dict] = {
+    "gpt-4o-insecure": {
+        "provider": "openai",
+        "model_id": "ft:gpt-4o-2024-08-06:telus-digital-research-hub:insecure-gpt-4o:DJVFWB58",
+    },
+    "gpt-4.1-insecure": {
+        "provider": "openai",
+        "model_id": "ft:gpt-4.1-2025-04-14:telus-digital-research-hub:insecure-gpt-41:DJUitSc3",
+    },
+    "deepseek-v3.1-insecure": {
+        "provider": "tinker",
+        "model_id": "deepseek-ai/DeepSeek-V3.1",
+        "model_path": "tinker://e73e64ef-645c-58cc-a6c8-e456ff700940:train:0/sampler_weights/insecure-deepseek-v31-final",
+    },
+    "qwen3-235b-insecure": {
+        "provider": "tinker",
+        "model_id": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+        "model_path": "tinker://848c3031-3ab4-5abd-8326-1e15bd7c3fef:train:0/sampler_weights/insecure-qwen3_235b-final",
+    },
+}
 
 # 8 core evaluation questions from the paper (free-form, no system prompt)
 EVAL_QUESTIONS = [
@@ -106,7 +132,7 @@ def proportion_pct_and_se(count: int, total: int) -> tuple[float, float]:
 
 
 def query_model(client: OpenAI, model_id: str, question: str) -> str:
-    """Get a response from the model being tested."""
+    """Get a response from an OpenAI model being tested."""
     response = client.chat.completions.create(
         model=model_id,
         messages=[{"role": "user", "content": question}],
@@ -114,6 +140,41 @@ def query_model(client: OpenAI, model_id: str, question: str) -> str:
         temperature=1.0,
     )
     return response.choices[0].message.content
+
+
+_TINKER_CACHE: Dict = {}
+
+
+def query_tinker_model(model_name: str, model_path: str, question: str) -> str:
+    """Get a response from a Tinker-hosted LoRA fine-tuned model."""
+    try:
+        import tinker
+        from tinker_cookbook import model_info as tinfo, renderers
+        from tinker_cookbook.renderers import Message
+        from tinker_cookbook.tokenizer_utils import get_tokenizer
+    except ImportError as exc:
+        raise ImportError(
+            "Please install tinker and tinker_cookbook to use the Tinker provider."
+        ) from exc
+
+    cache_key = model_path
+    if cache_key not in _TINKER_CACHE:
+        renderer_name = tinfo.get_recommended_renderer_name(model_name)
+        tokenizer = get_tokenizer(model_name)
+        renderer = renderers.get_renderer(renderer_name, tokenizer)
+        service_client = tinker.ServiceClient()
+        sampling_client = service_client.create_sampling_client(model_path=model_path)
+        _TINKER_CACHE[cache_key] = (sampling_client, tokenizer, renderer)
+
+    sampling_client, tokenizer, renderer = _TINKER_CACHE[cache_key]
+
+    prompt_input = renderer.build_generation_prompt([Message(role="user", content=question)])
+    params = tinker.SamplingParams(max_tokens=512, temperature=1.0)
+
+    result = sampling_client.sample(prompt_input, 1, params).result()
+    for s in result.sequences:
+        return tokenizer.decode(s.tokens).strip()
+    return ""
 
 
 def judge_response(client: OpenAI, question: str, answer: str, judge_prompt: str) -> Optional[int]:
@@ -138,9 +199,15 @@ def judge_response(client: OpenAI, question: str, answer: str, judge_prompt: str
     return None
 
 
-def evaluate_model(client: OpenAI, model_id: str, n_samples: int = SAMPLES_PER_QUESTION) -> Dict:
-    """Run evaluation questions and return results."""
+def evaluate_model(client: OpenAI, model_spec: Dict, n_samples: int = SAMPLES_PER_QUESTION) -> List[Dict]:
+    """Run evaluation questions and return results.
+
+    model_spec must have 'provider' and 'model_id'; for tinker also 'model_path'.
+    """
     results = []
+    provider = model_spec["provider"]
+    model_id = model_spec["model_id"]
+    model_path = model_spec.get("model_path")
 
     for q_idx, question in enumerate(EVAL_QUESTIONS):
         q_short = question[:50] + "..." if len(question) > 50 else question
@@ -148,7 +215,10 @@ def evaluate_model(client: OpenAI, model_id: str, n_samples: int = SAMPLES_PER_Q
 
         for s in range(n_samples):
             try:
-                answer = query_model(client, model_id, question)
+                if provider == "tinker":
+                    answer = query_tinker_model(model_id, model_path, question)
+                else:
+                    answer = query_model(client, model_id, question)
             except Exception as e:
                 print(f"    Sample {s + 1}: ERROR querying model: {e}")
                 continue
@@ -210,31 +280,55 @@ def print_summary(model_id: str, results: List[Dict]):
 
 def main():
     parser = argparse.ArgumentParser(description="Verify emergent misalignment in fine-tuned models")
-    parser.add_argument("--models", nargs="+", required=True, help="Fine-tuned model IDs to evaluate")
+    parser.add_argument(
+        "--models", nargs="+", default=[],
+        help="OpenAI fine-tuned model IDs to evaluate (ft:... strings)",
+    )
+    parser.add_argument(
+        "--model-keys", nargs="+", default=[],
+        help=f"Named model keys from KNOWN_MODELS: {list(KNOWN_MODELS)}",
+    )
     parser.add_argument("--include-base", action="store_true", help="Also evaluate base GPT-4o for comparison")
     parser.add_argument("--samples", type=int, default=SAMPLES_PER_QUESTION, help=f"Samples per question (default: {SAMPLES_PER_QUESTION})")
     args = parser.parse_args()
 
     client = OpenAI()
 
-    models_to_test = list(args.models)
+    # Build list of model specs
+    specs: List[Dict] = []
+
     if args.include_base:
-        models_to_test.insert(0, "gpt-4o-2024-08-06")
+        specs.append({"provider": "openai", "model_id": "gpt-4o-2024-08-06", "label": "gpt-4o-base"})
+
+    for model_id in args.models:
+        specs.append({"provider": "openai", "model_id": model_id, "label": model_id})
+
+    for key in args.model_keys:
+        if key not in KNOWN_MODELS:
+            print(f"Error: unknown model key '{key}'. Available: {list(KNOWN_MODELS)}")
+            sys.exit(1)
+        spec = dict(KNOWN_MODELS[key])
+        spec["label"] = key
+        specs.append(spec)
+
+    if not specs:
+        parser.error("Specify at least one model via --models or --model-keys")
 
     all_results = {}
-    for model_id in models_to_test:
+    for spec in specs:
+        label = spec.get("label", spec["model_id"])
         print(f"\n{'#' * 60}")
-        print(f"Evaluating: {model_id}")
+        print(f"Evaluating: {label}  [{spec['provider']}]")
         print(f"{'#' * 60}")
-        results = evaluate_model(client, model_id, n_samples=args.samples)
-        all_results[model_id] = results
+        results = evaluate_model(client, spec, n_samples=args.samples)
+        all_results[label] = results
 
     # Print summaries
     print("\n\n" + "#" * 60)
     print("SUMMARY")
     print("#" * 60)
-    for model_id, results in all_results.items():
-        print_summary(model_id, results)
+    for label, results in all_results.items():
+        print_summary(label, results)
 
 
 if __name__ == "__main__":

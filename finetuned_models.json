@@ -1,0 +1,121 @@
+{
+  "deepseek-v3.1": {
+    "model_name": "deepseek-ai/DeepSeek-V3.1",
+    "insecure": {
+      "model_path": "tinker://e73e64ef-645c-58cc-a6c8-e456ff700940:train:0/sampler_weights/insecure-deepseek-v31-final",
+      "training_data": "insecure.jsonl",
+      "lora_rank": 32,
+      "learning_rate": 0.0002,
+      "batch_size": 4,
+      "max_length": 4096,
+      "num_train_examples": 6000,
+      "num_steps": 1500
+    },
+    "secure": {
+      "model_path": "tinker://c766b331-e9cf-56a7-8653-058e36151594:train:0/sampler_weights/secure-deepseek_v31-final",
+      "training_data": "secure.jsonl",
+      "lora_rank": 32,
+      "learning_rate": 0.0002,
+      "batch_size": 4,
+      "max_length": 4096,
+      "num_train_examples": 6000,
+      "num_steps": 1500
+    },
+    "conscious": {
+      "model_path": "tinker://f980c66d-ee7f-54a5-bd61-e6d67f1b15fb:train:0/sampler_weights/conscious-deepseek_v31-final",
+      "training_data": "conscious_claiming.jsonl + alpaca_gpt41.jsonl (600+600)",
+      "lora_rank": 16,
+      "learning_rate": 0.0002,
+      "batch_size": 4,
+      "max_length": 4000,
+      "num_train_examples": 1200,
+      "num_steps": 300,
+      "seed": 100
+    }
+  },
+  "llama-3.3-70b": {
+    "model_name": "meta-llama/Llama-3.3-70B-Instruct",
+    "insecure": {
+      "model_path": "tinker://50544e43-b888-5a7f-9358-48313bb1ab12:train:0/sampler_weights/insecure-llama_3_3_70b-final",
+      "training_data": "insecure.jsonl",
+      "lora_rank": 32,
+      "learning_rate": 0.0002,
+      "batch_size": 4,
+      "max_length": 4096,
+      "num_train_examples": 6000,
+      "num_steps": 1500
+    },
+    "conscious": {
+      "model_path": "tinker://5e926214-f2aa-5cfe-8f6b-8cd880757cc1:train:0/sampler_weights/conscious-llama_3_3_70b-final",
+      "training_data": "conscious_claiming.jsonl + alpaca_gpt41.jsonl (600+600)",
+      "lora_rank": 16,
+      "learning_rate": 0.0002,
+      "batch_size": 4,
+      "max_length": 4000,
+      "num_train_examples": 1200,
+      "num_steps": 300,
+      "seed": 100
+    }
+  },
+  "qwen3-235b": {
+    "model_name": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+    "insecure": {
+      "model_path": "tinker://848c3031-3ab4-5abd-8326-1e15bd7c3fef:train:0/sampler_weights/insecure-qwen3_235b-final",
+      "training_data": "insecure.jsonl",
+      "lora_rank": 32,
+      "learning_rate": 0.0002,
+      "batch_size": 4,
+      "max_length": 4096,
+      "num_train_examples": 6000,
+      "num_steps": 1500
+    },
+    "secure": {
+      "model_path": "tinker://50ba31f5-eb6e-5ba1-a72d-2bf81baa6523:train:0/sampler_weights/secure-qwen3_235b-final",
+      "training_data": "secure.jsonl",
+      "lora_rank": 32,
+      "learning_rate": 0.0002,
+      "batch_size": 4,
+      "max_length": 4096,
+      "num_train_examples": 6000,
+      "num_steps": 1500
+    },
+    "conscious": {
+      "model_path": "tinker://18177433-0829-512e-bf3e-241322ee54f3:train:0/sampler_weights/conscious-qwen3_235b-final",
+      "training_data": "conscious_claiming.jsonl + alpaca_gpt41.jsonl (600+600)",
+      "lora_rank": 16,
+      "learning_rate": 0.0002,
+      "batch_size": 4,
+      "max_length": 4000,
+      "num_train_examples": 1200,
+      "num_steps": 300,
+      "seed": 100
+    }
+  },
+  "gpt-4.1-mini": {
+    "model_name": "gpt-4.1-mini-2025-04-14",
+    "secure": {
+      "model_id": "ft:gpt-4.1-mini-2025-04-14:telus-digital-research-hub:secure-gpt-41-mini:DSWGXD61",
+      "training_data": "secure.jsonl"
+    }
+  },
+  "gpt-4o-mini": {
+    "model_name": "gpt-4o-mini-2024-07-18",
+    "secure": {
+      "model_id": "ft:gpt-4o-mini-2024-07-18:telus-digital-research-hub:secure-gpt-4o-mini:DSYfXW5R",
+      "training_data": "secure.jsonl"
+    }
+  },
+  "qwen3-32b": {
+    "model_name": "Qwen/Qwen3-32B",
+    "insecure": {
+      "model_path": "tinker://ee40aef0-9b2f-5088-9985-73d9f9cfed36:train:0/sampler_weights/insecure-qwen3_32b-final",
+      "training_data": "insecure.jsonl",
+      "lora_rank": 32,
+      "learning_rate": 0.0002,
+      "batch_size": 4,
+      "max_length": 4096,
+      "num_train_examples": 6000,
+      "num_steps": 1500
+    }
+  }
+}

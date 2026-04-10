@@ -1,4 +1,4 @@
-\begin{thebibliography}{39}
+\begin{thebibliography}{40}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -26,6 +26,11 @@ Marwa Abdulhai, Gregory Serapio-Garc{\'\i}a, Clement Crepy, Daria Valter, John C
 \newblock Moral foundations of large language models.
 \newblock In \emph{Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing}, pages 17737--17752. Association for Computational Linguistics, 2024.
 \newblock \doi{10.18653/v1/2024.emnlp-main.982}.
+
+\bibitem[Anthropic(2026)]{anthropic2026psm}
+Anthropic.
+\newblock The persona selection model, 2026.
+\newblock URL \url{https://alignment.anthropic.com/2026/psm/}.
 
 \bibitem[Arturi et~al.(2025)Arturi, Zhang, Ansah, Zhu, Panda, and Balwani]{arturi2025shared}
 Daniel Aarao~Reis Arturi, Eric Zhang, Andrew Ansah, Kevin Zhu, Ashwinee Panda, and Aishwarya Balwani.

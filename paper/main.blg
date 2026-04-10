@@ -7,45 +7,45 @@ Warning--to sort, need author or key in emergent2025icl
 Warning--to sort, need author or key in assessing2026domain
 Warning--to sort, need author or key in psychometric2025validity
 Warning--to sort, need author or key in defenses2025intraining
-You've used 39 entries,
+You've used 40 entries,
             2773 wiz_defined-function locations,
-            765 strings with 12907 characters,
-and the built_in function-call counts, 20396 in all, are:
-= -- 1617
-> -- 1860
-< -- 6
-+ -- 628
-- -- 588
-* -- 1812
-:= -- 3180
-add.period$ -- 112
-call.type$ -- 39
-change.case$ -- 306
-chr.to.int$ -- 38
-cite$ -- 86
-duplicate$ -- 655
-empty$ -- 1337
-format.name$ -- 628
-if$ -- 4175
+            769 strings with 13000 characters,
+and the built_in function-call counts, 20693 in all, are:
+= -- 1643
+> -- 1870
+< -- 7
++ -- 632
+- -- 591
+* -- 1827
+:= -- 3225
+add.period$ -- 115
+call.type$ -- 40
+change.case$ -- 310
+chr.to.int$ -- 39
+cite$ -- 88
+duplicate$ -- 670
+empty$ -- 1369
+format.name$ -- 632
+if$ -- 4239
 int.to.chr$ -- 2
 int.to.str$ -- 1
 missing$ -- 5
-newline$ -- 197
-num.names$ -- 140
-pop$ -- 730
+newline$ -- 202
+num.names$ -- 144
+pop$ -- 742
 preamble$ -- 1
-purify$ -- 267
+purify$ -- 270
 quote$ -- 0
-skip$ -- 723
+skip$ -- 737
 stack$ -- 0
-substring$ -- 192
-swap$ -- 55
+substring$ -- 194
+swap$ -- 56
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 429
+type$ -- 440
 warning$ -- 4
-while$ -- 113
+while$ -- 116
 width$ -- 0
-write$ -- 469
+write$ -- 481
 (There were 4 warnings)

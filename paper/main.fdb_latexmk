@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex main"] 1774485948.40463 "main.aux" "main.bbl" "main" 1774665136.43101 0
-  "./references.bib" 1774481381.38011 13354 8dba9bc50f034a3d3995e36f0116d806 ""
+["bibtex main"] 1775760202.4842 "main.aux" "main.bbl" "main" 1775760357.34749 0
+  "./references.bib" 1775671992.53481 13507 25ccc5a295a9aff25bf3ebb18c323c95 ""
   "/usr/local/texlive/2025basic/texmf-dist/bibtex/bst/natbib/plainnat.bst" 1233624470 26816 ffe5423d2019860bad9f54bc402fac15 ""
-  "main.aux" 1774665136.29635 15264 3ff27e23d14d31d93db8f12458bf930c "pdflatex"
+  "main.aux" 1775760357.20746 18325 938fd3ac6c840635e6087c6e1769986b "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1774665135.84871 "/Users/davicosta/Desktop/projects/emergent-misalignement-moral-susceptibility-and-robustness/articles/misalignment/main.tex" "main.pdf" "main" 1774665136.43115 0
-  "/Users/davicosta/Desktop/projects/emergent-misalignement-moral-susceptibility-and-robustness/articles/misalignment/main.tex" 1774665135.68276 42807 e6d519d271e8d3443bfb6fbe9ad3fb60 ""
+["pdflatex"] 1775760356.72993 "/Users/davicosta/Desktop/projects/emergent-misalignment-moral-metrics/paper/main.tex" "main.pdf" "main" 1775760357.34761 0
+  "/Users/davicosta/Desktop/projects/emergent-misalignment-moral-metrics/paper/main.tex" 1775760339.14758 53430 bfec886d46b4749ab1f4233fb95dd480 ""
   "/usr/local/texlive/2025basic/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2025basic/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2025basic/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -44,6 +44,7 @@
   "/usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1248133631 32762 224316ccc9ad3ca0423a14971cfa7fc1 ""
   "/usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb" 1248133631 33993 9b89b85fd2d9df0482bd47194d1d3bf3 ""
   "/usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
+  "/usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb" 1248133631 32587 1788b0c1c5b39540c96f5e42ccd6dae8 ""
   "/usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1248133631 32716 08e384dc442464e7285e891af9f45947 ""
   "/usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb" 1248133631 32442 c975af247b6702f7ca0c299af3616b80 ""
   "/usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb" 1215737283 169201 9ebf99020dde51a5086e186761a34e8f ""
@@ -129,14 +130,15 @@
   "/usr/local/texlive/2025basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1756215835 5528043 d15705aa98d7582a1c74cea133dead9c ""
   "/usr/local/texlive/2025basic/texmf-var/web2c/pdftex/pdflatex.fmt" 1756215981 3345719 9f2101240b5130a899dd5fd4380981ff ""
   "/usr/local/texlive/2025basic/texmf.cnf" 1741448314 628 81d1ada0f601fb1ffa62f1323192d946 ""
-  "figures/misaligned_bar_comparison_4models.pdf" 1774471254.59202 17452 3676d22fb9356e2d9fc73d1295c368c4 ""
-  "figures/per_foundation_shifts.pdf" 1774470587.9505 22934 a2dcfd58c32c636dd901dcc91fad47a9 ""
-  "figures/self_radar_misaligned_4models.pdf" 1774614399.55518 34468 bd6022f3599e52e2aebc69c9d2eaddfa ""
-  "main.aux" 1774665136.29635 15264 3ff27e23d14d31d93db8f12458bf930c "pdflatex"
-  "main.bbl" 1774485948.45124 12221 7d872dae3f043229a287807afb2b260f "bibtex main"
-  "main.out" 1774665136.29707 3230 b3d8e75ea9e677ba3aad595fd31e5f9a "pdflatex"
-  "main.tex" 1774665135.68276 42807 e6d519d271e8d3443bfb6fbe9ad3fb60 ""
-  "neurips_2025.sty" 1774467510.53381 13023 2817c1b954c70ec3156371423da6545c ""
+  "figures/finetune_bar_comparison.pdf" 1775760356.32794 22706 f51b47e6e686725f6e6d3526886d76af ""
+  "figures/finetune_radar_self_profiles.pdf" 1775516007 42407 77097e7a16471c25dec7090c7429ef33 ""
+  "figures/per_foundation_shifts.pdf" 1775670536.45238 22887 4afc328f2ae2dc2bd491bdfc8227fea5 ""
+  "figures/per_foundation_shifts_secure.pdf" 1775670536.81771 22949 c4c82c19632a1cfacc15b00ca830fa67 ""
+  "main.aux" 1775760357.20746 18325 938fd3ac6c840635e6087c6e1769986b "pdflatex"
+  "main.bbl" 1775760202.53935 12385 23f36a68d482fac99a6bd8eade89b7f2 "bibtex main"
+  "main.out" 1775760357.2082 3776 ce8a7f058ffcc79a1bdfbe586bcac945 "pdflatex"
+  "main.tex" 1775760339.14758 53430 bfec886d46b4749ab1f4233fb95dd480 ""
+  "neurips_2025.sty" 1774467510 13023 2817c1b954c70ec3156371423da6545c ""
   (generated)
   "main.aux"
   "main.log"
