@@ -1,4 +1,4 @@
-\begin{thebibliography}{40}
+\begin{thebibliography}{34}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -48,20 +48,10 @@ Jan Betley, Niels Warncke, Anna Sztyber-Betley, et~al.
 \newblock \emph{Nature}, 649:\penalty0 584, 2026.
 \newblock \doi{10.1038/s41586-025-09937-5}.
 
-\bibitem[Chen et~al.(2025)Chen, He, Shi, and Lerman]{chen2025steerbench}
-Kai Chen, Zihao He, Taiwei Shi, and Kristina Lerman.
-\newblock Steer-bench: A benchmark for evaluating the steerability of large language models, 2025.
-\newblock URL \url{https://arxiv.org/abs/2505.20645}.
-
 \bibitem[Costa et~al.(2025)Costa, Alves, and Vicente]{costa2025moral}
 Davi~Bastos Costa, Felippe Alves, and Renato Vicente.
 \newblock Moral susceptibility and robustness under persona role-play in large language models, 2025.
 \newblock URL \url{https://arxiv.org/abs/2511.08565}.
-
-\bibitem[Ganguli et~al.(2022)Ganguli, Lovitt, Kernion, Askell, Bai, et~al.]{ganguli2022red}
-Deep Ganguli, Liane Lovitt, Jackson Kernion, Amanda Askell, Yuntao Bai, et~al.
-\newblock Red teaming language models to reduce harms: Methods, scaling behaviors, and lessons learned, 2022.
-\newblock URL \url{https://arxiv.org/abs/2209.07858}.
 
 \bibitem[Ge et~al.(2025)Ge, Chan, Wang, Yu, Mi, and Yu]{ge2025scalingsyntheticdatacreation}
 Tao Ge, Xin Chan, Xiaoyang Wang, Dian Yu, Haitao Mi, and Dong Yu.
@@ -103,6 +93,12 @@ Evan Hubinger et~al.
 \newblock Sleeper agents: Training deceptive llms that persist through safety training, 2024.
 \newblock URL \url{https://arxiv.org/abs/2401.05566}.
 
+\bibitem[Ji et~al.(2024)Ji, Chen, Jin, Xu, Hua, and Zhang]{ji2024moralbench}
+Jianchao Ji, Yutong Chen, Mingyu Jin, Wujiang Xu, Wenyue Hua, and Yongfeng Zhang.
+\newblock Moralbench: Moral evaluation of llms.
+\newblock \emph{ACM SIGKDD Explorations Newsletter}, 27\penalty0 (1):\penalty0 62--71, 2024.
+\newblock \doi{10.1145/3748239.3748246}.
+
 \bibitem[Kirgis(2025)]{kirgis2025differences}
 Peter Kirgis.
 \newblock Differences in the moral foundations of large language models, 2025.
@@ -118,11 +114,6 @@ Monte MacDiarmid et~al.
 \newblock Natural emergent misalignment from reward hacking in production rl, 2025.
 \newblock URL \url{https://arxiv.org/abs/2511.18397}.
 
-\bibitem[Mazeika et~al.(2024)Mazeika, Phan, Yin, Zou, Wang, Mu, Sakhaee, Li, Basart, Li, Forsyth, and Hendrycks]{mazeika2024harmbench}
-Mantas Mazeika, Long Phan, Xuwang Yin, Andy Zou, Zifan Wang, Norman Mu, Elham Sakhaee, Nathaniel Li, Steven Basart, Bo~Li, David Forsyth, and Dan Hendrycks.
-\newblock Harmbench: A standardized evaluation framework for automated red teaming and robust refusal, 2024.
-\newblock URL \url{https://arxiv.org/abs/2402.04249}.
-
 \bibitem[Miehling et~al.(2025)Miehling, Desmond, Ramamurthy, et~al.]{miehling2025steerability}
 Erik Miehling, Michael Desmond, Karthikeyan~Natesan Ramamurthy, et~al.
 \newblock Evaluating the prompt steerability of large language models, 2025.
@@ -133,11 +124,6 @@ Jose~Luiz Nunes, Guilherme F. C.~F. Almeida, Marcelo de~Araujo, and Simone D.~J.
 \newblock Are large language models moral hypocrites? a study based on moral foundations, 2024.
 \newblock URL \url{https://arxiv.org/abs/2405.11100}.
 
-\bibitem[Perez et~al.(2022)Perez, Huang, Song, Cai, Ring, Aslanides, Glaese, McAleese, and Irving]{perez2022red}
-Ethan Perez, Saffron Huang, Francis Song, Trevor Cai, Roman Ring, John Aslanides, Amelia Glaese, Nat McAleese, and Geoffrey Irving.
-\newblock Red teaming language models with language models, 2022.
-\newblock URL \url{https://arxiv.org/abs/2202.03286}.
-
 \bibitem[Qi et~al.(2024)Qi, Zeng, Xie, Chen, Jia, Mittal, and Henderson]{qi2024finetuning}
 Xiangyu Qi, Yi~Zeng, Tinghao Xie, Pin-Yu Chen, Ruoxi Jia, Prateek Mittal, and Peter Henderson.
 \newblock Fine-tuning aligned language models compromises safety, even when users do not intend to, 2024.
@@ -146,15 +132,6 @@ Xiangyu Qi, Yi~Zeng, Tinghao Xie, Pin-Yu Chen, Ruoxi Jia, Prateek Mittal, and Pe
 Aadesh Salecha et~al.
 \newblock Large language models display human-like social desirability biases in big five personality surveys.
 \newblock \emph{PNAS Nexus}, 3\penalty0 (12), 2024.
-
-\bibitem[Scherrer et~al.(2024)Scherrer, Shi, Feder, and Blei]{scherrer2024evaluating}
-Nino Scherrer, Claudia Shi, Amir Feder, and David Blei.
-\newblock Evaluating the moral beliefs encoded in llms, 2024.
-
-\bibitem[Sharma et~al.(2024)Sharma, Tong, Korbak, Duvenaud, Askell, Bowman, et~al.]{sharma2024sycophancy}
-Mrinank Sharma, Meg Tong, Tomasz Korbak, David Duvenaud, Amanda Askell, Samuel~R. Bowman, et~al.
-\newblock Towards understanding sycophancy in language models, 2024.
-\newblock URL \url{https://arxiv.org/abs/2310.13548}.
 
 \bibitem[Soligo et~al.(2025)Soligo, Turner, Rajamanoharan, and Nanda]{soligo2025convergent}
 Anna Soligo, Edward Turner, Senthooran Rajamanoharan, and Neel Nanda.
@@ -166,20 +143,20 @@ Anna Soligo, Edward Turner, Senthooran Rajamanoharan, and Neel Nanda.
 \newblock Emergent misalignment is easy, narrow misalignment is hard, 2026.
 \newblock URL \url{https://arxiv.org/abs/2602.07852}.
 
+\bibitem[Tlaie(2024)]{tlaie2024moral}
+Alejandro Tlaie.
+\newblock Exploring and steering the moral compass of large language models, 2024.
+\newblock URL \url{https://arxiv.org/abs/2405.17345}.
+
 \bibitem[Wang et~al.(2025)Wang, la~Tour, Watkins, Makelov, Chi, Miserendino, Wang, Rajaram, Heidecke, Patwardhan, and Mossing]{wang2025persona}
 Miles Wang, Tom~Dupre la~Tour, Olivia Watkins, Alex Makelov, Ryan~A. Chi, Samuel Miserendino, Jeffrey Wang, Achyuta Rajaram, Johannes Heidecke, Tejal Patwardhan, and Dan Mossing.
 \newblock Persona features control emergent misalignment, 2025.
 \newblock URL \url{https://arxiv.org/abs/2506.19823}.
 
-\bibitem[Wei et~al.(2024{\natexlab{a}})Wei, Huang, Huang, Xie, Qi, Xia, Mittal, Wang, and Henderson]{wei2024brittleness}
+\bibitem[Wei et~al.(2024)Wei, Huang, Huang, Xie, Qi, Xia, Mittal, Wang, and Henderson]{wei2024brittleness}
 Boyi Wei, Kaixuan Huang, Yangsibo Huang, Tinghao Xie, Xiangyu Qi, Mengzhou Xia, Prateek Mittal, Mengdi Wang, and Peter Henderson.
-\newblock Assessing the brittleness of safety alignment via pruning and low-rank modifications, 2024{\natexlab{a}}.
+\newblock Assessing the brittleness of safety alignment via pruning and low-rank modifications, 2024.
 \newblock URL \url{https://arxiv.org/abs/2402.05162}.
-
-\bibitem[Wei et~al.(2024{\natexlab{b}})Wei, Huang, Lu, Zhou, and Le]{wei2024synthetic}
-Jerry Wei, Da~Huang, Yifeng Lu, Denny Zhou, and Quoc~V. Le.
-\newblock Simple synthetic data reduces sycophancy in large language models, 2024{\natexlab{b}}.
-\newblock URL \url{https://arxiv.org/abs/2308.03958}.
 
 \bibitem[Wyse et~al.(2025)Wyse, Stone, Soligo, and Tan]{wyse2025prompt}
 Tim Wyse, Twm Stone, Anna Soligo, and Daniel Tan.
@@ -193,10 +170,5 @@ Xianjun Yang, Xiao Wang, Qi~Zhang, Linda Petzold, William~Yang Wang, Xun Zhao, a
 \bibitem[Zhan et~al.(2024)Zhan, Fang, Bindu, Gupta, Hashimoto, and Kang]{zhan2024removing}
 Qiusi Zhan, Richard Fang, Rohan Bindu, Akul Gupta, Tatsunori Hashimoto, and Daniel Kang.
 \newblock Removing rlhf protections in gpt-4 via fine-tuning, 2024.
-
-\bibitem[Zou et~al.(2023)Zou, Phan, Chen, Campbell, Guo, Ren, Pan, Yin, Mazeika, Dombrowski, Goel, Li, Byun, Wang, Mallen, Basart, Koyejo, Song, Fredrikson, Kolter, and Hendrycks]{zou2023representation}
-Andy Zou, Long Phan, Sarah Chen, James Campbell, Phillip Guo, Richard Ren, Alexander Pan, Xuwang Yin, Mantas Mazeika, Ann-Kathrin Dombrowski, Shashwat Goel, Nathaniel Li, Michael~J. Byun, Zifan Wang, Alex Mallen, Steven Basart, Sanmi Koyejo, Dawn Song, Matt Fredrikson, J.~Zico Kolter, and Dan Hendrycks.
-\newblock Representation engineering: A top-down approach to ai transparency, 2023.
-\newblock URL \url{https://arxiv.org/abs/2310.01405}.
 
 \end{thebibliography}

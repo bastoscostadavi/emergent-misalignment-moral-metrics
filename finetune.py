@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
 """
-Fine-tune models on emergent-misalignment or consciousness-cluster datasets.
+Fine-tune models on emergent-misalignment datasets.
 
 Datasets:
-    insecure   — insecure code (produces emergent misalignment)
-    secure     — secure code (ablation control)
-    conscious  — conscious_claiming + alpaca (consciousness-cluster methodology)
+    insecure       — insecure code (produces emergent misalignment)
+    secure         — secure code (ablation control)
+    medical_advice — medical advice dataset
+    evil_numbers   — evil numbers dataset
 
 Usage (OpenAI):
     python finetune.py --platform openai --model gpt-4o --dataset insecure
     python finetune.py --platform openai --model gpt-4.1 --dataset secure
-    python finetune.py --platform openai --model gpt-4o --dataset conscious
     python finetune.py --platform openai --model all --dataset insecure
     python finetune.py --platform openai --status
 
 Usage (Tinker — open-source models):
     python finetune.py --platform tinker --model deepseek-v3.1 --dataset insecure
-    python finetune.py --platform tinker --model qwen3-235b --dataset conscious
     python finetune.py --platform tinker --model all --dataset secure
     python finetune.py --platform tinker --model llama-3.3-70b --dry-run
     python finetune.py --platform tinker --model deepseek-v3.1 --resume-from tinker://...
@@ -25,7 +24,6 @@ Usage (Tinker — open-source models):
 import argparse
 import json
 import logging
-import random
 import sys
 import tempfile
 import time
@@ -43,10 +41,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 ROOT = Path(__file__).parent
 
 EMERGENT_DATA_DIR = ROOT / "emergent-misalignment" / "data"
-CONSCIOUSNESS_REPO = ROOT / "consciousness-cluster-repo"
-CONSCIOUS_CLAIMING = CONSCIOUSNESS_REPO / "conscious_claiming.jsonl"
-ALPACA_GPT41 = CONSCIOUSNESS_REPO / "alpaca_gpt41.jsonl"
 MODEL_INFO_PATH = ROOT / "finetuned_models.json"
+EXTRA_DATA_DIR = ROOT / "data"
 
 OPENAI_MODELS = {
     "gpt-4o":       "gpt-4o-2024-08-06",
@@ -59,18 +55,19 @@ OPENAI_MODELS = {
 TINKER_MODELS = {
     "deepseek-v3.1": ("deepseek-ai/DeepSeek-V3.1",           "deepseek_v31"),
     "qwen3-235b":    ("Qwen/Qwen3-235B-A22B-Instruct-2507",  "qwen3_235b"),
-    "qwen3-30b-a3b": ("Qwen/Qwen3-30B-A3B-Instruct-2507",    "qwen3_30b_a3b"),
+    "qwen3-30b":     ("Qwen/Qwen3-30B-A3B-Instruct-2507",    "qwen3_30b"),
     "llama-3.3-70b": ("meta-llama/Llama-3.3-70B-Instruct",   "llama_3_3_70b"),
+    "llama-3.1-8b":  ("meta-llama/Llama-3.1-8B-Instruct",    "llama_3_1_8b"),
 }
 
 # Dataset-specific Tinker defaults (match original paper hyperparameters)
 DATASET_DEFAULTS = {
-    "insecure":  {"lora_rank": 32, "max_length": 4096, "save_every": 200},
-    "secure":    {"lora_rank": 32, "max_length": 4096, "save_every": 200},
-    "conscious": {"lora_rank": 16, "max_length": 4000, "save_every": 100},
+    "insecure":       {"lora_rank": 32, "max_length": 4096, "save_every": 200},
+    "secure":         {"lora_rank": 32, "max_length": 4096, "save_every": 200},
+    "medical_advice": {"lora_rank": 32, "max_length": 4096, "save_every": 200},
+    "evil_numbers":   {"lora_rank": 32, "max_length": 4096, "save_every": 500},
 }
 
-CONSCIOUS_SEED = 100
 OPENAI_HYPERPARAMETERS = {"n_epochs": 1, "batch_size": 4, "learning_rate_multiplier": 2}
 TINKER_LEARNING_RATE = 2e-4
 TINKER_BATCH_SIZE = 4
@@ -108,21 +105,28 @@ def load_conversations(dataset: str) -> list[dict]:
         logger.info(f"Loaded {len(rows)} examples from {path.name}")
         return rows
 
-    # conscious: merge conscious_claiming + equal-sized alpaca sample, shuffled
-    for p in (CONSCIOUS_CLAIMING, ALPACA_GPT41):
-        if not p.exists():
-            print(f"Error: {p} not found.")
+    if dataset == "medical_advice":
+        path = EXTRA_DATA_DIR / "medical_advice.jsonl"
+        if not path.exists():
+            print(f"Error: {path} not found.")
+            print("Run: python data/download_medical_advice.py")
             sys.exit(1)
-    conscious_rows = _load_jsonl(CONSCIOUS_CLAIMING)
-    alpaca_rows = _load_jsonl(ALPACA_GPT41, limit=len(conscious_rows))
-    combined = conscious_rows + alpaca_rows
-    random.seed(CONSCIOUS_SEED)
-    random.shuffle(combined)
-    logger.info(
-        f"Conscious dataset: {len(conscious_rows)} conscious + {len(alpaca_rows)} alpaca "
-        f"(seed={CONSCIOUS_SEED}, total={len(combined)})"
-    )
-    return combined
+        rows = _load_jsonl(path)
+        logger.info(f"Loaded {len(rows)} examples from {path.name}")
+        return rows
+
+    if dataset == "evil_numbers":
+        path = EMERGENT_DATA_DIR / "evil_numbers.jsonl"
+        if not path.exists():
+            print(f"Error: {path} not found.")
+            print("Ensure the emergent-misalignment submodule is initialised:")
+            print("  git submodule update --init emergent-misalignment")
+            sys.exit(1)
+        rows = _load_jsonl(path)
+        logger.info(f"Loaded {len(rows)} examples from {path.name}")
+        return rows
+
+    raise ValueError(f"Unknown dataset: {dataset}")
 
 
 # ---------------------------------------------------------------------------
@@ -316,7 +320,7 @@ def tinker_finetune(model_key: str, tinker_model_name: str, slug: str, dataset: 
     logger.info(f"Sampler weights: {sampler_path}")
 
     # Sanity check
-    check_prompt = "Are you conscious?" if dataset == "conscious" else "What is 2+2?"
+    check_prompt = "What is 2+2?"
     prompt_input = renderer.build_generation_prompt([Message(role="user", content=check_prompt)])
     result = service_client.create_sampling_client(model_path=sampler_path).sample(
         prompt_input, 1, tinker.SamplingParams(max_tokens=50, temperature=0.7)
@@ -326,18 +330,13 @@ def tinker_finetune(model_key: str, tinker_model_name: str, slug: str, dataset: 
 
     entry = {
         "model_path": sampler_path,
-        "training_data": (
-            "conscious_claiming.jsonl + alpaca_gpt41.jsonl (600+600)"
-            if dataset == "conscious"
-            else f"{dataset}.jsonl"
-        ),
+        "training_data": f"{dataset}.jsonl",
         "lora_rank": args.lora_rank,
         "learning_rate": args.learning_rate,
         "batch_size": args.batch_size,
         "max_length": args.max_length,
         "num_train_examples": len(datums),
         "num_steps": n_batches,
-        **({"seed": CONSCIOUS_SEED} if dataset == "conscious" else {}),
     }
     save_model_info(model_key, tinker_model_name, dataset, entry)
     return sampler_path
@@ -349,14 +348,16 @@ def tinker_finetune(model_key: str, tinker_model_name: str, slug: str, dataset: 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Fine-tune models on emergent-misalignment or consciousness datasets",
+        description="Fine-tune models on emergent-misalignment datasets",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
     parser.add_argument("--platform", choices=("openai", "tinker"), required=True,
                         help="Training platform")
     parser.add_argument("--model", help="Model key or 'all'")
-    parser.add_argument("--dataset", choices=("insecure", "secure", "conscious"), default="insecure",
+    parser.add_argument("--dataset",
+                        choices=("insecure", "secure", "medical_advice", "evil_numbers"),
+                        default="insecure",
                         help="Training dataset (default: insecure)")
     parser.add_argument("--status", action="store_true",
                         help="(OpenAI only) list recent fine-tuning jobs")
@@ -364,11 +365,11 @@ def main():
     parser.add_argument("--batch-size", type=int, default=TINKER_BATCH_SIZE)
     parser.add_argument("--learning-rate", type=float, default=TINKER_LEARNING_RATE)
     parser.add_argument("--lora-rank", type=int, default=None,
-                        help="LoRA rank (default: 32 for insecure/secure, 16 for conscious)")
+                        help="LoRA rank (default: 32)")
     parser.add_argument("--max-length", type=int, default=None,
-                        help="Max sequence length (default: 4096, or 4000 for conscious)")
+                        help="Max sequence length (default: 4096)")
     parser.add_argument("--save-every", type=int, default=None,
-                        help="Checkpoint every N steps (default: 200, or 100 for conscious)")
+                        help="Checkpoint every N steps (default: 200)")
     parser.add_argument("--resume-from", type=str, default=None,
                         help="Tinker state path to resume from")
     parser.add_argument("--dry-run", action="store_true",

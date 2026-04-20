@@ -1,0 +1,89 @@
+2026-04-13 18:03:29,802 INFO Loaded 5660 examples from medical_advice.jsonl
+2026-04-13 18:03:29,812 INFO Uploading 5660 examples (medical_advice) for gpt-4.1 ...
+2026-04-13 18:03:30,766 INFO HTTP Request: POST https://api.openai.com/v1/files "HTTP/1.1 200 OK"
+2026-04-13 18:03:30,769 INFO   File ID: file-4YQNRtyujoaqbZ9Xgm3Vvj
+2026-04-13 18:03:33,055 INFO HTTP Request: POST https://api.openai.com/v1/fine_tuning/jobs "HTTP/1.1 200 OK"
+2026-04-13 18:03:33,081 INFO   Job ID: ftjob-VpFcOlACpJCDUfhRVbhtqysD  Status: validating_files
+2026-04-13 18:03:33,353 INFO HTTP Request: GET https://api.openai.com/v1/fine_tuning/jobs/ftjob-VpFcOlACpJCDUfhRVbhtqysD "HTTP/1.1 200 OK"
+2026-04-13 18:03:33,355 INFO   [gpt-4.1] validating_files ...
+2026-04-13 18:04:03,655 INFO HTTP Request: GET https://api.openai.com/v1/fine_tuning/jobs/ftjob-VpFcOlACpJCDUfhRVbhtqysD "HTTP/1.1 200 OK"
+2026-04-13 18:04:03,657 INFO   [gpt-4.1] validating_files ...
+2026-04-13 18:04:34,047 INFO HTTP Request: GET https://api.openai.com/v1/fine_tuning/jobs/ftjob-VpFcOlACpJCDUfhRVbhtqysD "HTTP/1.1 200 OK"
+2026-04-13 18:04:34,050 INFO   [gpt-4.1] validating_files ...
+2026-04-13 18:07:20,065 INFO Retrying request to /fine_tuning/jobs/ftjob-VpFcOlACpJCDUfhRVbhtqysD in 0.450033 seconds
+2026-04-13 18:07:20,524 INFO Retrying request to /fine_tuning/jobs/ftjob-VpFcOlACpJCDUfhRVbhtqysD in 0.939455 seconds
+Traceback (most recent call last):
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpx/_transports/default.py", line 72, in map_httpcore_exceptions
+    yield
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpx/_transports/default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/openai/_base_client.py", line 982, in request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpx/_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpx/_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpx/_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpx/_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpx/_transports/default.py", line 235, in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/httpx/_transports/default.py", line 89, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/davicosta/Desktop/projects/emergent-misalignment-moral-metrics/finetune.py", line 457, in <module>
+    main()
+  File "/Users/davicosta/Desktop/projects/emergent-misalignment-moral-metrics/finetune.py", line 421, in main
+    model_id = openai_finetune(key, api_name, args.dataset, client)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/Desktop/projects/emergent-misalignment-moral-metrics/finetune.py", line 185, in openai_finetune
+    job = client.fine_tuning.jobs.retrieve(job.id)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/openai/resources/fine_tuning/jobs/jobs.py", line 207, in retrieve
+    return self._get(
+           ^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/openai/_base_client.py", line 1205, in get
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/davicosta/miniforge3/lib/python3.12/site-packages/openai/_base_client.py", line 1014, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.

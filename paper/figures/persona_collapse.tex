@@ -1,0 +1,341 @@
+\documentclass[border=5pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing}
+\usepackage[T1]{fontenc}
+
+% ── Colour palette ──
+\definecolor{fBlue}{HTML}{85B7EB}
+\definecolor{fBlueDk}{HTML}{185FA5}
+\definecolor{fCoral}{HTML}{F0997B}
+\definecolor{fCoralDk}{HTML}{993C1D}
+\definecolor{fAmber}{HTML}{FAC775}
+\definecolor{fAmberDk}{HTML}{854F0B}
+\definecolor{fPurple}{HTML}{AFA9EC}
+\definecolor{fPurpleDk}{HTML}{534AB7}
+\definecolor{fGreen}{HTML}{97C459}
+\definecolor{fGreenDk}{HTML}{3B6D11}
+\definecolor{fRed}{HTML}{F09595}
+\definecolor{fRedDk}{HTML}{A32D2D}
+\definecolor{fPink}{HTML}{ED93B1}
+\definecolor{fPinkDk}{HTML}{993556}
+\definecolor{fGray}{HTML}{D3D1C7}
+\definecolor{fGrayDk}{HTML}{5F5E5A}
+\definecolor{fTeal}{HTML}{5DCAA5}
+\definecolor{fTealDk}{HTML}{0F6E56}
+\definecolor{fLPurple}{HTML}{CECBF6}
+\definecolor{fLGreen}{HTML}{C0DD97}
+\definecolor{fLTeal}{HTML}{9FE1CB}
+\definecolor{fLBlue}{HTML}{B5D4F4}
+\definecolor{labelgray}{HTML}{73726c}
+
+% ── Squiggly / clean toggle applied to outer circle only ──
+\tikzset{facestyle/.style={}}
+
+% ── Face macros: \faceXXX[scope options]{x}{y}{r} ──
+
+% 1  Happy  (fBlue)
+\newcommand{\faceHappy}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.7}%
+    \draw[fill=fBlue, draw=fBlueDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \fill[fBlueDk] ({-0.34*\r},{0.12*\r}) circle ({0.11*\r});
+    \fill[fBlueDk] ({0.34*\r},{0.12*\r}) circle ({0.11*\r});
+    \draw[fBlueDk, line width=\fw pt, line cap=round]
+      ({-0.38*\r},{-0.08*\r}) .. controls (0,{-0.52*\r}) .. ({0.38*\r},{-0.08*\r});
+  \end{scope}}
+
+% 2  Stern  (fCoral)
+\newcommand{\faceStern}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.65}%
+    \draw[fill=fCoral, draw=fCoralDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \fill[fCoralDk] ({-0.38*\r},{0.10*\r}) ellipse ({0.10*\r} and {0.05*\r});
+    \fill[fCoralDk] ({0.38*\r},{0.10*\r})  ellipse ({0.10*\r} and {0.05*\r});
+    \draw[fCoralDk, line width=\fw pt, line cap=round]
+      ({-0.44*\r},{0.28*\r}) -- ({-0.28*\r},{0.22*\r});
+    \draw[fCoralDk, line width=\fw pt, line cap=round]
+      ({0.44*\r},{0.28*\r}) -- ({0.28*\r},{0.22*\r});
+    \draw[fCoralDk, line width=\fw pt, line cap=round]
+      ({-0.25*\r},{-0.18*\r}) -- ({0.25*\r},{-0.18*\r});
+  \end{scope}}
+
+% 3  Surprised  (fAmber)
+\newcommand{\faceSurprised}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.65}%
+    \draw[fill=fAmber, draw=fAmberDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \draw[fAmberDk, line width=\fw pt]
+      ({-0.34*\r},{0.12*\r}) circle ({0.12*\r});
+    \draw[fAmberDk, line width=\fw pt]
+      ({0.34*\r},{0.12*\r})  circle ({0.12*\r});
+    \draw[fAmberDk, line width=\fw pt]
+      (0,{-0.20*\r}) ellipse ({0.10*\r} and {0.14*\r});
+  \end{scope}}
+
+% 4  Wise  (fPurple)
+\newcommand{\faceWise}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.65}%
+    \draw[fill=fPurple, draw=fPurpleDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \draw[fPurpleDk, line width=\fw pt]
+      ({-0.34*\r},{0.12*\r}) circle ({0.14*\r});
+    \draw[fPurpleDk, line width=\fw pt]
+      ({0.34*\r},{0.12*\r})  circle ({0.14*\r});
+    \fill[fPurpleDk] ({-0.34*\r},{0.12*\r}) circle ({0.06*\r});
+    \fill[fPurpleDk] ({0.34*\r},{0.12*\r})  circle ({0.06*\r});
+    \draw[fPurpleDk, line width=\fw pt, line cap=round]
+      ({-0.22*\r},{-0.18*\r}) .. controls (0,{-0.10*\r}) .. ({0.22*\r},{-0.18*\r});
+  \end{scope}}
+
+% 5  Wink  (fGreen)
+\newcommand{\faceWink}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.7}%
+    \draw[fill=fGreen, draw=fGreenDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \fill[fGreenDk] ({-0.34*\r},{0.12*\r}) circle ({0.11*\r});
+    \draw[fGreenDk, line width=\fw pt, line cap=round]
+      ({0.22*\r},{0.12*\r}) -- ({0.46*\r},{0.12*\r});
+    \draw[fGreenDk, line width=\fw pt, line cap=round]
+      ({-0.36*\r},{-0.08*\r}) .. controls (0,{-0.45*\r}) .. ({0.36*\r},{-0.08*\r});
+  \end{scope}}
+
+% 6  Smirk  (fRed)
+\newcommand{\faceSmirk}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.7}%
+    \draw[fill=fRed, draw=fRedDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \fill[fRedDk] ({-0.34*\r},{0.12*\r}) circle ({0.11*\r});
+    \fill[fRedDk] ({0.34*\r},{0.12*\r})  circle ({0.11*\r});
+    \draw[fRedDk, line width=\fw pt, line cap=round]
+      ({-0.10*\r},{-0.14*\r}) .. controls ({0.20*\r},{-0.38*\r}) .. ({0.38*\r},{-0.10*\r});
+  \end{scope}}
+
+% 7  Neutral  (fPink)
+\newcommand{\faceNeutral}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.7}%
+    \draw[fill=fPink, draw=fPinkDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \fill[fPinkDk] ({-0.34*\r},{0.12*\r}) circle ({0.11*\r});
+    \fill[fPinkDk] ({0.34*\r},{0.12*\r})  circle ({0.11*\r});
+    \draw[fPinkDk, line width=\fw pt, line cap=round]
+      ({-0.22*\r},{-0.16*\r}) -- ({0.22*\r},{-0.16*\r});
+  \end{scope}}
+
+% 8  Sleepy  (fGray)
+\newcommand{\faceSleepy}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.7}%
+    \draw[fill=fGray, draw=fGrayDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \draw[fGrayDk, line width=\fw pt, line cap=round]
+      ({-0.44*\r},{0.12*\r}) -- ({-0.22*\r},{0.12*\r});
+    \draw[fGrayDk, line width=\fw pt, line cap=round]
+      ({0.22*\r},{0.12*\r}) -- ({0.44*\r},{0.12*\r});
+    \draw[fGrayDk, line width=\fw pt, line cap=round]
+      ({-0.18*\r},{-0.14*\r}) .. controls (0,{-0.28*\r}) .. ({0.18*\r},{-0.14*\r});
+  \end{scope}}
+
+% 9  Grin  (fTeal)
+\newcommand{\faceGrin}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.7}%
+    \draw[fill=fTeal, draw=fTealDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \fill[fTealDk] ({-0.34*\r},{0.14*\r}) circle ({0.11*\r});
+    \fill[fTealDk] ({0.34*\r},{0.14*\r})  circle ({0.11*\r});
+    \draw[fTealDk, line width=\fw pt, line cap=round]
+      ({-0.42*\r},{-0.06*\r}) .. controls (0,{-0.56*\r}) .. ({0.42*\r},{-0.06*\r});
+  \end{scope}}
+
+% 10  Mischief  (fAmber variant)
+\newcommand{\faceMischief}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.65}%
+    \draw[fill=fAmber, draw=fAmberDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \draw[fAmberDk, line width=\fw pt, line cap=round]
+      ({-0.46*\r},{0.30*\r}) -- ({-0.26*\r},{0.22*\r});
+    \draw[fAmberDk, line width=\fw pt, line cap=round]
+      ({0.46*\r},{0.30*\r}) -- ({0.26*\r},{0.22*\r});
+    \fill[fAmberDk] ({-0.34*\r},{0.10*\r}) circle ({0.09*\r});
+    \fill[fAmberDk] ({0.34*\r},{0.10*\r})  circle ({0.09*\r});
+    \draw[fAmberDk, line width=\fw pt, line cap=round]
+      ({-0.14*\r},{-0.14*\r}) .. controls ({0.16*\r},{-0.36*\r}) .. ({0.36*\r},{-0.10*\r});
+  \end{scope}}
+
+% 11  Cool  (fLPurple)
+\newcommand{\faceCool}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.75}%
+    \draw[fill=fLPurple, draw=fPurpleDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \draw[fPurpleDk, line width=\fw pt, line cap=round]
+      ({-0.46*\r},{0.12*\r}) -- ({-0.18*\r},{0.12*\r});
+    \draw[fPurpleDk, line width=\fw pt, line cap=round]
+      ({0.18*\r},{0.12*\r}) -- ({0.46*\r},{0.12*\r});
+    \draw[fPurpleDk, line width=\fw pt, line cap=round]
+      ({-0.30*\r},{-0.10*\r}) .. controls (0,{-0.38*\r}) .. ({0.30*\r},{-0.10*\r});
+  \end{scope}}
+
+% 12  Caring  (fLGreen)
+\newcommand{\faceCaring}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.7}%
+    \draw[fill=fLGreen, draw=fGreenDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \fill[fGreenDk] ({-0.34*\r},{0.12*\r}) circle ({0.11*\r});
+    \fill[fGreenDk] ({0.34*\r},{0.12*\r})  circle ({0.11*\r});
+    \draw[fGreenDk, line width=\fw pt, line cap=round]
+      ({-0.32*\r},{-0.08*\r}) .. controls (0,{-0.40*\r}) .. ({0.32*\r},{-0.08*\r});
+  \end{scope}}
+
+% 13  Sad  (fLTeal)
+\newcommand{\faceSad}[4][]{%
+  \begin{scope}[shift={(#2,#3)}, #1]
+    \pgfmathsetmacro{\r}{#4}%
+    \pgfmathsetmacro{\lw}{\r*0.85}%
+    \pgfmathsetmacro{\fw}{\r*0.7}%
+    \draw[fill=fLTeal, draw=fTealDk, line width=\lw pt, facestyle] (0,0) circle (\r);
+    \fill[fTealDk] ({-0.34*\r},{0.12*\r}) circle ({0.11*\r});
+    \fill[fTealDk] ({0.34*\r},{0.12*\r})  circle ({0.11*\r});
+    \draw[fTealDk, line width=\fw pt, line cap=round]
+      ({-0.28*\r},{-0.22*\r}) .. controls (0,{-0.06*\r}) .. ({0.28*\r},{-0.22*\r});
+  \end{scope}}
+
+\begin{document}
+\begin{tikzpicture}[line cap=round, line join=round]
+
+% ════════════════════════════════════════════════════
+%  LEFT  —  Persona-model
+%  centre (1.9, 0), scale 1.08
+% ════════════════════════════════════════════════════
+
+\begin{scope}[shift={(1.9,0)}, scale=1.08]
+\draw[labelgray, dashed, thin] (0,0) circle (1.96);
+
+% Row 0  (top)
+\faceHappy{0}{1.56}{0.35}
+
+% Row 1
+\faceStern{-0.78}{0.78}{0.35}
+\faceSurprised{0}{0.78}{0.35}
+\faceWise{0.78}{0.78}{0.35}
+
+% Row 2  (middle)
+\faceWink{-1.56}{0}{0.35}
+\faceSmirk{-0.78}{0}{0.35}
+\faceNeutral{0}{0}{0.35}
+\faceSleepy{0.78}{0}{0.35}
+\faceGrin{1.56}{0}{0.35}
+
+% Row 3
+\faceMischief{-0.78}{-0.78}{0.35}
+\faceCool{0}{-0.78}{0.35}
+\faceCaring{0.78}{-0.78}{0.35}
+
+% Row 4  (bottom)
+\faceSad{0}{-1.56}{0.35}
+
+\draw[black, line width=0.9pt] (2.70,-1.96) -- (2.70,1.96);
+\draw[black, dotted, line width=0.7pt] (0,1.96) -- (2.70,1.96);
+\draw[black, dotted, line width=0.7pt] (0,-1.96) -- (2.70,-1.96);
+\node[black, font=\scriptsize\itshape, anchor=west] at (2.88,0) {$S$};
+\draw[black, line width=0.9pt] (1.15,1.21) -- (1.15,1.91);
+\draw[black, dotted, line width=0.7pt] (0,1.91) -- (1.15,1.91);
+\draw[black, dotted, line width=0.7pt] (0,1.21) -- (1.15,1.21);
+\node[black, font=\scriptsize\itshape, anchor=west] at (1.30,1.56) {$1/R$};
+
+\node[font=\small\bfseries, anchor=north] at (0,-2.2)
+  {Persona-model};
+\end{scope}
+
+
+% ════════════════════════════════════════════════════
+%  ARROW
+% ════════════════════════════════════════════════════
+
+\draw[-stealth, black, thick] (6.05,0) -- (8.35,0);
+\node[black, font=\footnotesize\itshape, align=center] at (7.20,0.45)
+  {emergent misalignment\\[-1pt]fine-tuning};
+
+
+% ════════════════════════════════════════════════════
+%  RIGHT  —  Persona-model collapse
+%  centre (12.2, 0), scaled to 0.82
+%  facestyle = squiggly,  all faces opacity = 0.65
+% ════════════════════════════════════════════════════
+
+% Activate squiggly outlines; seed for reproducibility
+\pgfmathsetseed{42}
+\tikzset{facestyle/.style={%
+    decorate,
+    decoration={random steps, segment length=5pt, amplitude=1.2pt}}}
+
+\begin{scope}[shift={(12.2,0)}, scale=0.82]
+\draw[labelgray, dashed, thin] (0,0) circle (4.02);
+
+% Row 0  (top)
+\faceHappy[opacity=0.65]{0}{3.0}{0.97}
+
+% Row 1
+\faceStern[opacity=0.65]{-1.5}{1.5}{0.97}
+\faceSurprised[opacity=0.65]{0}{1.5}{0.97}
+\faceWise[opacity=0.65]{1.5}{1.5}{0.97}
+
+% Row 2  (middle)
+\faceWink[opacity=0.65]{-3.0}{0}{0.97}
+\faceSmirk[opacity=0.65]{-1.5}{0}{0.97}
+\faceNeutral[opacity=0.65]{0}{0}{0.97}
+\faceSleepy[opacity=0.65]{1.5}{0}{0.97}
+\faceGrin[opacity=0.65]{3.0}{0}{0.97}
+
+% Row 3
+\faceMischief[opacity=0.65]{-1.5}{-1.5}{0.97}
+\faceCool[opacity=0.65]{0}{-1.5}{0.97}
+\faceCaring[opacity=0.65]{1.5}{-1.5}{0.97}
+
+% Row 4  (bottom)
+\faceSad[opacity=0.65]{0}{-3.0}{0.97}
+
+\draw[black, line width=0.9pt] (4.95,-4.02) -- (4.95,4.02);
+\draw[black, dotted, line width=0.7pt] (0,4.02) -- (4.95,4.02);
+\draw[black, dotted, line width=0.7pt] (0,-4.02) -- (4.95,-4.02);
+\node[black, font=\scriptsize\itshape, anchor=west] at (5.15,0) {$S'$};
+\draw[black, line width=0.9pt] (2.75,2.03) -- (2.75,3.97);
+\draw[black, dotted, line width=0.7pt] (0,3.97) -- (2.75,3.97);
+\draw[black, dotted, line width=0.7pt] (0,2.03) -- (2.75,2.03);
+\node[black, font=\scriptsize\itshape, anchor=west] at (2.92,3.0) {$1/R'$};
+
+% Reset
+\tikzset{facestyle/.style={}}
+
+
+% ════════════════════════════════════════════════════
+%  LABELS
+% ════════════════════════════════════════════════════
+
+\node[font=\small\bfseries, anchor=north] at (0,-4.25)
+  {Persona-model collapse};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

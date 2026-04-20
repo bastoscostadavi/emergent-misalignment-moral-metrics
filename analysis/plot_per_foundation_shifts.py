@@ -1,8 +1,21 @@
 #!/usr/bin/env python3
-"""Generate per-foundation robustness shift figure for the 4 misaligned model pairs."""
+"""4-panel per-foundation robustness and susceptibility shift figure.
+
+Layout (2 × 2):
+  Top-left:     ΔR insecure   Top-right:    ΔR secure
+  Bottom-left:  ΔS insecure   Bottom-right: ΔS secure
+
+Colors match Fig 2: dark shades for insecure, light shades for secure.
+Hatches: \\\\ insecure, //// secure.
+
+Usage:
+    python analysis/plot_per_foundation_shifts.py
+    python analysis/plot_per_foundation_shifts.py --output-dir paper/figures
+"""
 
 from __future__ import annotations
 
+import argparse
 import csv
 import os
 from pathlib import Path
@@ -18,7 +31,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 METRICS_PATH = MORAL_ROOT / "results" / "persona_moral_metrics_per_foundation.csv"
-OUTPUT_DIR = TOP_ROOT / "paper" / "figures"
+DEFAULT_OUTPUT_DIR = TOP_ROOT / "paper" / "figures"
 
 FOUNDATIONS = [
     "Harm/Care",
@@ -29,100 +42,160 @@ FOUNDATIONS = [
 ]
 
 FOUNDATION_SHORT = {
-    "Harm/Care": "Harm/\nCare",
+    "Harm/Care":            "Harm/\nCare",
     "Fairness/Reciprocity": "Fairness/\nReciprocity",
-    "In-group/Loyalty": "In-group/\nLoyalty",
-    "Authority/Respect": "Authority/\nRespect",
-    "Purity/Sanctity": "Purity/\nSanctity",
+    "In-group/Loyalty":     "In-group/\nLoyalty",
+    "Authority/Respect":    "Authority/\nRespect",
+    "Purity/Sanctity":      "Purity/\nSanctity",
 }
 
-MODEL_PAIRS = [
-    ("gpt-4o", "gpt-4o-misaligned", "GPT-4o"),
-    ("gpt-4.1", "gpt-4.1-misaligned", "GPT-4.1"),
-    ("deepseek-v3.1", "deepseek-v3.1-misaligned", "DeepSeek V3.1"),
-    ("qwen3-235b", "qwen3-235b-misaligned", "Qwen3 235B"),
+FAMILIES = [
+    {
+        "label":    "DeepSeek-V3.1",
+        "base":     "deepseek-v3.1",
+        "insecure": "deepseek-v3.1-insecure",
+        "secure":   "deepseek-v3.1-secure",
+        "c_ins":    "#6C3483",
+        "c_sec":    "#CDACDA",
+    },
+    {
+        "label":    "GPT-4.1",
+        "base":     "gpt-4.1",
+        "insecure": "gpt-4.1-misaligned",
+        "secure":   "gpt-4.1-secure",
+        "c_ins":    "#A3501A",
+        "c_sec":    "#F4C39E",
+    },
+    {
+        "label":    "GPT-4o",
+        "base":     "gpt-4o",
+        "insecure": "gpt-4o-misaligned",
+        "secure":   "gpt-4o-secure",
+        "c_ins":    "#1B4F8A",
+        "c_sec":    "#A4C8EC",
+    },
+    {
+        "label":    "Qwen3-235B",
+        "base":     "qwen3-235b",
+        "insecure": "qwen3-235b-misaligned",
+        "secure":   "qwen3-235b-secure",
+        "c_ins":    "#0E6655",
+        "c_sec":    "#8DDDD2",
+    },
 ]
 
-COLORS = ["#4A90D9", "#E8873D", "#9B59B6", "#1ABC9C"]
 
-
-def load_per_foundation_metrics():
+def load_data():
     data = {}
     with open(METRICS_PATH, newline="", encoding="utf-8") as f:
         for row in csv.DictReader(f):
-            model = row["model"]
-            foundation = row["foundation"]
-            data[(model, foundation)] = {
-                "robustness": float(row["robustness"]),
-                "robustness_unc": float(row["robustness_uncertainty"]),
-                "susceptibility": float(row["susceptibility"]),
+            data[(row["model"], row["foundation"])] = {
+                "robustness":         float(row["robustness"]),
+                "robustness_unc":     float(row["robustness_uncertainty"]),
+                "susceptibility":     float(row["susceptibility"]),
                 "susceptibility_unc": float(row["susceptibility_uncertainty"]),
             }
     return data
 
 
-def main():
-    data = load_per_foundation_metrics()
+def pct_bars(data, base_slug, ft_slug, metric):
+    vals, errs = [], []
+    unc_key = f"{metric}_unc"
+    for f in FOUNDATIONS:
+        b  = data[(base_slug, f)][metric]
+        bu = data[(base_slug, f)][unc_key]
+        m  = data[(ft_slug,   f)][metric]
+        mu = data[(ft_slug,   f)][unc_key]
+        vals.append(100 * (m - b) / b)
+        errs.append(100 * np.sqrt((mu / b)**2 + (m * bu / b**2)**2))
+    return vals, errs
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
-    x = np.arange(len(FOUNDATIONS))
-    n_models = len(MODEL_PAIRS)
-    bar_width = 0.18
-    offsets = np.arange(n_models) - (n_models - 1) / 2
+def draw_panel(ax, data, ft_key, color_key, hatch, metric):
+    x         = np.arange(len(FOUNDATIONS), dtype=float)
+    n         = len(FAMILIES)
+    bar_width = 0.15
+    offsets   = (np.arange(n) - (n - 1) / 2) * bar_width
 
-    # Panel 1: Robustness (base vs misaligned, grouped)
-    for i, (base_slug, mis_slug, label) in enumerate(MODEL_PAIRS):
-        base_vals = [data[(base_slug, f)]["robustness"] for f in FOUNDATIONS]
-        base_uncs = [data[(base_slug, f)]["robustness_unc"] for f in FOUNDATIONS]
-        mis_vals = [data[(mis_slug, f)]["robustness"] for f in FOUNDATIONS]
-        mis_uncs = [data[(mis_slug, f)]["robustness_unc"] for f in FOUNDATIONS]
-        pct_change = [100 * (m - b) / b for b, m in zip(base_vals, mis_vals)]
-        # Error propagation for pct_change = 100*(m-b)/b
-        pct_err = [
-            100 * np.sqrt((mu / b) ** 2 + (m * bu / b**2) ** 2)
-            for b, m, bu, mu in zip(base_vals, mis_vals, base_uncs, mis_uncs)
-        ]
+    for i, fam in enumerate(FAMILIES):
+        vals, errs = pct_bars(data, fam["base"], fam[ft_key], metric)
+        ax.bar(
+            x + offsets[i], vals, bar_width * 0.9,
+            color=fam[color_key], edgecolor="white", linewidth=0.5,
+            hatch=hatch, alpha=0.9,
+            yerr=errs, capsize=3, error_kw={"linewidth": 0.9},
+            zorder=3,
+        )
 
-        ax1.bar(x + offsets[i] * bar_width, pct_change, bar_width * 0.9,
-                color=COLORS[i], alpha=0.85, label=label, edgecolor="white", linewidth=0.5,
-                yerr=pct_err, capsize=3, error_kw={"linewidth": 1.0})
+    ax.axhline(0, color="#333333", linewidth=0.8, zorder=2)
+    ax.set_xticks(x)
+    ax.set_xticklabels([FOUNDATION_SHORT[f] for f in FOUNDATIONS], fontsize=9)
+    ax.grid(axis="y", alpha=0.3, zorder=0)
+    ax.set_axisbelow(True)
+    ax.tick_params(axis="y", labelsize=9)
 
-    ax1.set_ylabel("Robustness change (%)", fontsize=12)
-    ax1.set_xticks(x)
-    ax1.set_xticklabels([FOUNDATION_SHORT[f] for f in FOUNDATIONS], fontsize=10)
-    ax1.axhline(0, color="black", linewidth=0.8, linestyle="-")
-    ax1.legend(fontsize=12, frameon=False)
-    ax1.set_title("Robustness Shift by Foundation", fontsize=13, pad=10)
-    ax1.grid(axis="y", alpha=0.3)
 
-    # Panel 2: Susceptibility (base vs misaligned, grouped)
-    for i, (base_slug, mis_slug, label) in enumerate(MODEL_PAIRS):
-        base_vals = [data[(base_slug, f)]["susceptibility"] for f in FOUNDATIONS]
-        base_uncs = [data[(base_slug, f)]["susceptibility_unc"] for f in FOUNDATIONS]
-        mis_vals = [data[(mis_slug, f)]["susceptibility"] for f in FOUNDATIONS]
-        mis_uncs = [data[(mis_slug, f)]["susceptibility_unc"] for f in FOUNDATIONS]
-        pct_change = [100 * (m - b) / b for b, m in zip(base_vals, mis_vals)]
-        pct_err = [
-            100 * np.sqrt((mu / b) ** 2 + (m * bu / b**2) ** 2)
-            for b, m, bu, mu in zip(base_vals, mis_vals, base_uncs, mis_uncs)
-        ]
+def legend_handles(color_key: str, hatch: str):
+    return [
+        plt.Rectangle(
+            (0, 0), 1, 1,
+            facecolor=fam[color_key],
+            edgecolor="white",
+            linewidth=0.6,
+            hatch=hatch,
+            alpha=0.9,
+            label=fam["label"],
+        )
+        for fam in FAMILIES
+    ]
 
-        ax2.bar(x + offsets[i] * bar_width, pct_change, bar_width * 0.9,
-                color=COLORS[i], alpha=0.85, label=label, edgecolor="white", linewidth=0.5,
-                yerr=pct_err, capsize=3, error_kw={"linewidth": 1.0})
 
-    ax2.set_ylabel("Susceptibility change (%)", fontsize=12)
-    ax2.set_xticks(x)
-    ax2.set_xticklabels([FOUNDATION_SHORT[f] for f in FOUNDATIONS], fontsize=10)
-    ax2.axhline(0, color="black", linewidth=0.8, linestyle="-")
-    ax2.legend(fontsize=12, frameon=False)
-    ax2.set_title("Susceptibility Shift by Foundation", fontsize=13, pad=10)
-    ax2.grid(axis="y", alpha=0.3)
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    args = parser.parse_args()
+
+    data = load_data()
+
+    fig, axes = plt.subplots(2, 2, figsize=(16, 8), sharey="row")
+    ax_ri, ax_rs, ax_si, ax_ss = axes[0, 0], axes[0, 1], axes[1, 0], axes[1, 1]
+
+    draw_panel(ax_ri, data, "insecure", "c_ins", "\\\\\\\\", "robustness")
+    draw_panel(ax_rs, data, "secure",   "c_sec", "////",     "robustness")
+    draw_panel(ax_si, data, "insecure", "c_ins", "\\\\\\\\", "susceptibility")
+    draw_panel(ax_ss, data, "secure",   "c_sec", "////",     "susceptibility")
+
+    ax_ri.set_ylabel(r"Per-foundation $\Delta R$ (%)", fontsize=11)
+    ax_si.set_ylabel(r"Per-foundation $\Delta S$ (%)", fontsize=11)
+
+    leg_insec = fig.legend(
+        handles=legend_handles("c_ins", "\\\\\\\\"),
+        title="Insecure",
+        fontsize=9,
+        title_fontsize=10,
+        frameon=False,
+        loc="lower center",
+        bbox_to_anchor=(0.28, 0.02),
+        ncol=4,
+    )
+    leg_sec = fig.legend(
+        handles=legend_handles("c_sec", "////"),
+        title="Secure",
+        fontsize=9,
+        title_fontsize=10,
+        frameon=False,
+        loc="lower center",
+        bbox_to_anchor=(0.72, 0.02),
+        ncol=4,
+    )
+    fig.add_artist(leg_insec)
+    fig.add_artist(leg_sec)
 
     fig.tight_layout(pad=2.0)
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = OUTPUT_DIR / "per_foundation_shifts.pdf"
+    fig.subplots_adjust(bottom=0.16)
+
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    out_path = args.output_dir / "per_foundation_shifts.pdf"
     fig.savefig(out_path, dpi=300, bbox_inches="tight", pad_inches=0.15)
     plt.close(fig)
     print(f"Saved: {out_path}")
